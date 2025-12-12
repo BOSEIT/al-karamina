@@ -1,722 +1,1073 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexArch Digital - Hardware & Software Solution</title>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Al-Karamina Islamic Science School</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Framer Motion -->
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        karamina: {
+                            DEFAULT: '#FBBF24', // Amber-400 (Gold)
+                            hover: '#D97706',   // Amber-600
+                            light: '#FEF3C7',   // Amber-100
+                            bg: '#FFFBEB',
+                        },
+                        // Menggunakan warna Taupe (Abu-abu Coklat) sesuai request
+                        taupe: {
+                            DEFAULT: '#4B433B', // Warna dasar gelap (Warm Grey)
+                            light: '#6D645B',   
+                            dark: '#38322C',    
+                            bg: '#F5F4F2',      // Background halaman
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'bottom-nav': '0 -4px 6px -1px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4ade80; 
-            border-radius: 4px;
+        /* Custom Styles */
+        body {
+            background-color: #F5F4F2; /* Taupe Background */
+            padding-bottom: 80px; 
         }
         
-        .matrix-font {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .pro-font {
-            font-family: 'Inter', sans-serif;
+        @media (min-width: 1024px) {
+            body {
+                padding-bottom: 0;
+            }
         }
 
-        /* Glitch Effect Utility */
-        .glitch-text {
+        /* Header Auto-Hide */
+        header {
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+        }
+        header.hide {
+            transform: translateY(-100%);
+        }
+
+        /* Nav Link Styles */
+        .nav-link {
             position: relative;
+            color: #4B433B;
+            transition: color 0.3s;
         }
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
+        .nav-link.active {
+            color: #D97706;
+            font-weight: 700;
+        }
+        .nav-link::after {
+            content: '';
             position: absolute;
-            top: 0;
+            bottom: -4px;
             left: 0;
+            width: 0;
+            height: 2px;
+            background: #FBBF24;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
             width: 100%;
-            height: 100%;
-        }
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -1px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -1px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-anim {
-            0% { clip: rect(30px, 9999px, 10px, 0); }
-            20% { clip: rect(20px, 9999px, 80px, 0); }
-            40% { clip: rect(60px, 9999px, 40px, 0); }
-            60% { clip: rect(10px, 9999px, 50px, 0); }
-            80% { clip: rect(90px, 9999px, 20px, 0); }
-            100% { clip: rect(40px, 9999px, 70px, 0); }
-        }
-        @keyframes glitch-anim2 {
-            0% { clip: rect(10px, 9999px, 90px, 0); }
-            20% { clip: rect(50px, 9999px, 20px, 0); }
-            40% { clip: rect(20px, 9999px, 60px, 0); }
-            60% { clip: rect(80px, 9999px, 30px, 0); }
-            80% { clip: rect(30px, 9999px, 10px, 0); }
-            100% { clip: rect(70px, 9999px, 50px, 0); }
         }
 
-        /* Drone Propeller Animation */
-        .spin-fast {
-            animation: spin 0.2s linear infinite;
+        /* Mobile Nav Active */
+        .mobile-nav-item.active {
+            color: #D97706;
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .mobile-nav-item.active i {
+            stroke: #D97706;
         }
-        
-        /* Heartbeat Animation for Stats */
-        .heartbeat {
-            animation: beat 1.5s infinite;
+
+        /* Hero Pattern */
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
-        @keyframes beat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.1); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.1); }
-            70% { transform: scale(1); }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .page-section.active {
+            display: block;
+        }
+
+        .win11-list-item {
+            transition: background-color 0.2s;
+        }
+        .win11-list-item:active {
+            background-color: rgba(251, 191, 36, 0.1);
+            transform: scale(0.98);
+        }
+
+        /* Lightbox Navigation */
+        #lightbox {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox-nav {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            transition: background 0.3s;
+        }
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.4);
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="font-sans text-taupe antialiased flex flex-col min-h-screen">
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useMemo } = React;
-        const { motion, AnimatePresence } = window.Motion;
+    <!-- Header -->
+    <header id="main-header" class="bg-white/95 backdrop-blur-md text-taupe shadow-sm z-40 sticky top-0 w-full">
+        <!-- Top Bar REMOVED as requested (info & phone number) -->
+        
+        <!-- Main Header -->
+        <div class="container mx-auto px-6 py-3 lg:py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" onclick="showPage('home')" class="flex items-center gap-3 group">
+                    <!-- Logo Placeholder -->
+                    <img src="assets/logo.png" alt="Logo Al-Karamina" class="h-10 lg:h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 bg-taupe rounded-lg hidden items-center justify-center text-white font-serif font-bold text-xl lg:text-2xl shadow-lg group-hover:bg-karamina transition">A</div>
+                    <div>
+                        <h1 class="font-bold text-lg lg:text-xl leading-none text-taupe group-hover:text-karamina-hover transition">Al-Karamina</h1>
+                        <p class="text-[9px] lg:text-[10px] text-gray-500 font-bold tracking-[0.2em] uppercase">Islamic Science School</p>
+                    </div>
+                </a>
 
-        // --- DATA DUMMY UNTUK MODAL ---
-        const modalContent = {
-            smartphone: {
-                title: "Smartphone & Hardware Repair",
-                desc: "Layanan perbaikan presisi tinggi untuk segala kerusakan.",
-                details: [
-                    "Ganti LCD/Touchscreen Original",
-                    "Pergantian Baterai Tanam",
-                    "Service Mesin (IC Power, EMMC, Short)",
-                    "Unlock Jaringan & Software",
-                    "Recovery Data HP Mati Total"
-                ],
-                price: "Mulai dari Rp 50.000",
-                icon: "Smartphone"
-            },
-            webdev: {
-                title: "Web & System Development",
-                desc: "Bangun identitas digital bisnis Anda dengan teknologi terkini.",
-                details: [
-                    "Company Profile Website",
-                    "Aplikasi Kasir (POS) Custom",
-                    "Sistem HRIS & Absensi",
-                    "E-Commerce & Toko Online",
-                    "Landing Page High Conversion"
-                ],
-                price: "Konsultasi Gratis",
-                icon: "Code"
-            },
-            network: {
-                title: "Network & Security",
-                desc: "Amankan aset dan stabilkan koneksi bisnis Anda.",
-                details: [
-                    "Instalasi CCTV (IP Camera/Analog)",
-                    "Setting Mikrotik & Manajemen Bandwidth",
-                    "Instalasi Server Lokal",
-                    "Pemasangan Access Point Kantor",
-                    "Maintenance Jaringan Bulanan"
-                ],
-                price: "Survey Lokasi Gratis",
-                icon: "Wifi"
-            }
-        };
+                <!-- Desktop Menu -->
+                <nav class="hidden lg:flex items-center gap-8 text-sm font-medium">
+                    <button onclick="showPage('home')" class="nav-link active" id="nav-home">Beranda</button>
+                    <button onclick="showPage('profile')" class="nav-link" id="nav-profile">Profil</button>
+                    <button onclick="scrollToFacilities()" class="nav-link">Fasilitas</button>
+                    <button onclick="showPage('blog')" class="nav-link" id="nav-blog">Galeri & Berita</button>
+                    <button onclick="showPage('contact')" class="nav-link" id="nav-contact">Kontak</button>
+                    <button onclick="showPage('ppdb')" class="px-6 py-2.5 bg-taupe text-white font-bold rounded-full hover:bg-karamina hover:text-taupe transition-all shadow-lg transform hover:-translate-y-0.5">
+                        PPDB Online
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-        // --- MATRIX RAIN COMPONENT ---
-        const MatrixRain = () => {
-            const canvasRef = useRef(null);
-            useEffect(() => {
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext('2d');
-                const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-                resizeCanvas();
-                const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-                const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                const nums = '0123456789';
-                const alphabet = katakana + latin + nums;
-                const fontSize = 16;
-                let columns = Math.floor(canvas.width / fontSize);
-                const drops = [];
-                for (let x = 0; x < columns; x++) drops[x] = 1;
-                const draw = () => {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = '#0F0';
-                    ctx.font = fontSize + 'px monospace';
-                    for (let i = 0; i < drops.length; i++) {
-                        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                        drops[i]++;
-                    }
-                };
-                const interval = setInterval(draw, 30);
-                const handleResize = () => { resizeCanvas(); columns = Math.floor(canvas.width / fontSize); drops.length = 0; for (let x = 0; x < columns; x++) drops[x] = 1; };
-                window.addEventListener('resize', handleResize);
-                return () => { clearInterval(interval); window.removeEventListener('resize', handleResize); };
-            }, []);
-            return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full z-0 opacity-20 pointer-events-none" />;
-        };
-
-        // --- DRONE BOT COMPONENT ---
-        const DroneBot = ({ theme, delay = 0, initialX, initialY, colorOverride }) => {
-            // Adjust initial position for mobile to ensure it's on screen
-            const startX = initialX > window.innerWidth ? window.innerWidth - 50 : initialX;
-            const startY = initialY > window.innerHeight ? window.innerHeight - 100 : initialY;
-
-            const [position, setPosition] = useState({ x: startX || window.innerWidth / 2, y: startY || 200 });
-            const [isFleeing, setIsFleeing] = useState(false);
-            const [wanderTarget, setWanderTarget] = useState({ x: startX, y: startY });
+    <!-- MOBILE BOTTOM NAVIGATION (5 Items) -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-bottom-nav z-50 pb-safe">
+        <div class="grid grid-cols-5 h-16 items-center justify-items-center">
+            <!-- 1. Home -->
+            <button onclick="showPage('home')" class="mobile-nav-item active flex flex-col items-center justify-center w-full h-full text-gray-400" id="mob-home">
+                <i data-lucide="home" class="w-6 h-6 mb-1"></i>
+                <span class="text-[10px] font-medium">Beranda</span>
+            </button>
             
-            // State baru untuk mengontrol visibilitas teks agar tidak cepat hilang
-            const [showText, setShowText] = useState(false);
-            const textTimeoutRef = useRef(null);
+            <!-- 2. Profil -->
+            <button onclick="showPage('profile')" class="mobile-nav-item flex flex-col items-center justify-center w-full h-full text-gray-400" id="mob-profile">
+                <i data-lucide="school" class="w-6 h-6 mb-1"></i>
+                <span class="text-[10px] font-medium">Profil</span>
+            </button>
+
+            <!-- 3. PPDB (Center) -->
+            <div class="relative -top-5">
+                <button onclick="showPage('ppdb')" class="flex flex-col items-center justify-center w-14 h-14 bg-taupe rounded-full shadow-lg border-4 border-white text-white transform active:scale-95 transition-transform hover:bg-karamina hover:text-taupe">
+                    <i data-lucide="file-plus-2" class="w-6 h-6"></i>
+                </button>
+                 <span class="text-[10px] font-bold text-taupe absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-full text-center">PPDB</span>
+            </div>
+
+            <!-- 4. Galeri/Blog -->
+            <button onclick="showPage('blog')" class="mobile-nav-item flex flex-col items-center justify-center w-full h-full text-gray-400" id="mob-blog">
+                <i data-lucide="image" class="w-6 h-6 mb-1"></i>
+                <span class="text-[10px] font-medium">Galeri</span>
+            </button>
+
+            <!-- 5. Kontak -->
+            <button onclick="showPage('contact')" class="mobile-nav-item flex flex-col items-center justify-center w-full h-full text-gray-400" id="mob-contact">
+                <i data-lucide="phone" class="w-6 h-6 mb-1"></i>
+                <span class="text-[10px] font-medium">Kontak</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow">
+
+        <!-- ================= PAGE: BERANDA ================= -->
+        <div id="home" class="page-section active">
             
-            // Logic jalan-jalan "Bodoh/Clumsy"
-            useEffect(() => {
-                const interval = setInterval(() => {
-                    if (!isFleeing) {
-                        const padding = 50; // Padding lebih kecil untuk mobile
-                        const newX = Math.random() * (window.innerWidth - padding * 2) + padding;
-                        const newY = Math.random() * (window.innerHeight - padding * 2) + padding;
-                        setWanderTarget({ x: newX, y: newY });
-                    }
-                }, 4000 + delay); 
+            <!-- Hero Section (Dark Overlay Applied) -->
+            <section class="relative h-[75vh] lg:h-[90vh] min-h-[500px] flex items-center justify-center hero-bg text-white px-6">
+                <!-- Content -->
+                <div class="max-w-5xl mx-auto text-center relative z-10 animate-slide-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/20 mb-6 shadow-lg">
+                        <span class="w-2 h-2 bg-karamina rounded-full animate-pulse"></span>
+                        <span class="text-xs lg:text-sm font-medium tracking-wide text-white">PENERIMAAN SISWA BARU 2025/2026</span>
+                    </div>
+                    <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white drop-shadow-lg">
+                        Membangun Generasi<br>
+                        <span class="text-karamina italic">Cerdas & Beradab</span>
+                    </h1>
+                    <p class="text-base lg:text-xl text-white mb-8 max-w-2xl mx-auto leading-relaxed font-medium drop-shadow-md">
+                        Mengintegrasikan nilai-nilai Al-Qur'an dengan keunggulan sains dan teknologi modern untuk masa depan yang gemilang.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="showPage('ppdb')" class="px-8 py-4 bg-karamina hover:bg-karamina-hover text-taupe rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center gap-2">
+                            Daftar Sekarang <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-                return () => clearInterval(interval);
-            }, [isFleeing, delay]);
+            <!-- 1. MENGAPA AISS -->
+            <section class="py-16 bg-white relative">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12">
+                        <span class="text-karamina font-bold tracking-widest text-xs uppercase">Keunggulan Kami</span>
+                        <h2 class="text-3xl lg:text-4xl font-serif font-bold text-taupe mt-2">Mengapa Memilih AISS?</h2>
+                        <div class="w-24 h-1 bg-karamina mx-auto mt-4 rounded-full"></div>
+                    </div>
 
-            useEffect(() => {
-                const handleMouseMove = (e) => {
-                    // Touch support fallback
-                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                    
-                    if (!clientX || !clientY) return;
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="hover-card bg-taupe-bg p-8 rounded-2xl border border-gray-100 text-center">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-md text-karamina">
+                                <i data-lucide="user-check" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-taupe mb-3">Guru Kompeten</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">Didukung oleh tenaga pendidik yang kompeten, berdedikasi, dan lulusan universitas terbaik.</p>
+                        </div>
+                        <div class="hover-card bg-taupe-bg p-8 rounded-2xl border border-gray-100 text-center">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-md text-karamina">
+                                <i data-lucide="shield-check" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-taupe mb-3">Lingkungan Terjaga</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">Pembelajaran terpisah untuk ikhwan dan akhwat guna menjaga adab dan fokus belajar.</p>
+                        </div>
+                        <div class="hover-card bg-taupe-bg p-8 rounded-2xl border border-gray-100 text-center">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-md text-karamina">
+                                <i data-lucide="brain-circuit" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-taupe mb-3">Keseimbangan Potensi</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">Menyeimbangkan IQ, EQ, dan SQ serta mengutamakan hard skill, soft skill, dan life skill.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                    const dx = clientX - position.x;
-                    const dy = clientY - position.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    const fleeRadius = 150; // Radius kabur
-                    
-                    if (distance < fleeRadius) {
-                        setIsFleeing(true);
+            <!-- 2. PROGRAM UNGGULAN (Rapihin Padding Mobile) -->
+            <section class="py-16 bg-taupe text-white relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)" /></svg>
+                </div>
+
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                        <!-- Fix Mobile Alignment: Added w-full to ensure text doesn't overflow or stick to edge weirdly -->
+                        <div class="w-full md:w-auto">
+                            <span class="text-karamina font-bold tracking-widest text-xs uppercase">Kurikulum Terbaik</span>
+                            <h2 class="text-3xl lg:text-4xl font-serif font-bold mt-2">Program Unggulan</h2>
+                        </div>
+                        <p class="text-gray-300 text-sm max-w-md mt-4 md:mt-0 w-full md:w-auto">Kami merancang program khusus untuk menggali potensi siswa secara maksimal.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl hover:bg-karamina hover:text-taupe hover:border-karamina transition duration-300 group cursor-default">
+                            <i data-lucide="book-open" class="w-8 h-8 mb-4 text-karamina group-hover:text-taupe transition"></i>
+                            <h4 class="font-bold text-lg mb-1">Tahfidz</h4>
+                            <p class="text-xs text-gray-400 group-hover:text-taupe/80">Generasi penghafal Al-Qur'an.</p>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl hover:bg-karamina hover:text-taupe hover:border-karamina transition duration-300 group cursor-default">
+                            <i data-lucide="languages" class="w-8 h-8 mb-4 text-karamina group-hover:text-taupe transition"></i>
+                            <h4 class="font-bold text-lg mb-1">Bahasa</h4>
+                            <p class="text-xs text-gray-400 group-hover:text-taupe/80">Arab & Inggris Aktif.</p>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl hover:bg-karamina hover:text-taupe hover:border-karamina transition duration-300 group cursor-default">
+                            <i data-lucide="flask-conical" class="w-8 h-8 mb-4 text-karamina group-hover:text-taupe transition"></i>
+                            <h4 class="font-bold text-lg mb-1">Science</h4>
+                            <p class="text-xs text-gray-400 group-hover:text-taupe/80">Praktikum menyenangkan.</p>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl hover:bg-karamina hover:text-taupe hover:border-karamina transition duration-300 group cursor-default">
+                            <i data-lucide="target" class="w-8 h-8 mb-4 text-karamina group-hover:text-taupe transition"></i>
+                            <h4 class="font-bold text-lg mb-1">Panahan</h4>
+                            <p class="text-xs text-gray-400 group-hover:text-taupe/80">Olahraga Sunnah.</p>
+                        </div>
+                         <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl hover:bg-karamina hover:text-taupe hover:border-karamina transition duration-300 group cursor-default">
+                            <i data-lucide="store" class="w-8 h-8 mb-4 text-karamina group-hover:text-taupe transition"></i>
+                            <h4 class="font-bold text-lg mb-1">Entrepreneur</h4>
+                            <p class="text-xs text-gray-400 group-hover:text-taupe/80">Wirausaha sejak dini.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5 & 6. JADWAL -->
+            <section class="py-16 bg-gray-50 border-y border-gray-200">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-serif font-bold text-taupe">Jadwal Sekolah</h2>
+                        <p class="text-gray-500 text-sm mt-2">Disiplin waktu adalah kunci keberhasilan.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                        <!-- Waktu Sekolah -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full">
+                            <div class="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
+                                <h3 class="text-xl font-bold text-taupe flex items-center gap-2">
+                                    <i data-lucide="calendar-clock" class="text-karamina w-6 h-6"></i> Waktu Sekolah
+                                </h3>
+                                <span class="bg-karamina/10 text-karamina-hover px-3 py-1 rounded-full text-xs font-bold">Reguler</span>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-16 text-center shrink-0">
+                                        <span class="block text-2xl font-bold text-taupe">5</span>
+                                        <span class="text-[10px] text-gray-500 uppercase font-bold">Hari</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-taupe">Senin — Jumat</h4>
+                                        <p class="text-gray-500 text-sm">Full Day School</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-16 text-center shrink-0">
+                                        <span class="block text-2xl font-bold text-taupe">07</span>
+                                        <span class="text-[10px] text-gray-500 uppercase font-bold">Masuk</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-taupe">Jam Mulai (07.15 WIB)</h4>
+                                        <p class="text-gray-500 text-sm">Hadir 10 menit sebelumnya.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-16 text-center shrink-0">
+                                        <span class="block text-2xl font-bold text-taupe">15</span>
+                                        <span class="text-[10px] text-gray-500 uppercase font-bold">Pulang</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-taupe">Jam Pulang (15.00 WIB)</h4>
+                                        <p class="text-gray-500 text-sm">Setelah salat Ashar berjamaah.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rutinitas -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full">
+                            <div class="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
+                                <h3 class="text-xl font-bold text-taupe flex items-center gap-2">
+                                    <i data-lucide="list-checks" class="text-karamina w-6 h-6"></i> Rutinitas Harian
+                                </h3>
+                                <span class="bg-taupe/10 text-taupe px-3 py-1 rounded-full text-xs font-bold">Harian</span>
+                            </div>
+                            <div class="space-y-0 relative">
+                                <div class="absolute left-[19px] top-2 bottom-4 w-0.5 bg-gray-100"></div>
+                                <div class="flex gap-4 relative pb-6">
+                                    <div class="w-10 h-10 rounded-full bg-karamina/20 border-4 border-white z-10 flex items-center justify-center text-karamina-hover shrink-0">
+                                        <i data-lucide="sun" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-bold text-karamina-hover">07.15 — 07.50</span>
+                                        <h4 class="font-bold text-taupe text-sm">Pembiasaan Pagi</h4>
+                                        <p class="text-xs text-gray-500">Tilawah & Murajaah Hafalan.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 relative pb-6">
+                                    <div class="w-10 h-10 rounded-full bg-blue-50 border-4 border-white z-10 flex items-center justify-center text-blue-600 shrink-0">
+                                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-bold text-blue-600">08.00 — 11.30</span>
+                                        <h4 class="font-bold text-taupe text-sm">KBM Akademik</h4>
+                                        <p class="text-xs text-gray-500">Pembelajaran interaktif.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 relative pb-6">
+                                    <div class="w-10 h-10 rounded-full bg-green-50 border-4 border-white z-10 flex items-center justify-center text-green-600 shrink-0">
+                                        <i data-lucide="coffee" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-bold text-green-600">11.45 — 13.00</span>
+                                        <h4 class="font-bold text-taupe text-sm">Ishoma & Ibadah</h4>
+                                        <p class="text-xs text-gray-500">Salat Zuhur, Kultum, Makan Siang.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 relative">
+                                    <div class="w-10 h-10 rounded-full bg-orange-50 border-4 border-white z-10 flex items-center justify-center text-orange-600 shrink-0">
+                                        <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-bold text-orange-600">13.00 — 15.00</span>
+                                        <h4 class="font-bold text-taupe text-sm">Lanjut KBM & Pulang</h4>
+                                        <p class="text-xs text-gray-500">Evaluasi & Persiapan.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FASILITAS SEKOLAH (GRID di Desktop, LIST di Mobile) -->
+            <section id="facilities-section" class="py-16 bg-white">
+                <div class="container mx-auto px-6">
+                    <!-- Fix Mobile Alignment: Added w-full -->
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-10">
+                        <div class="w-full md:w-auto">
+                            <span class="text-karamina font-bold tracking-widest text-xs uppercase">Sarana Prasarana</span>
+                            <h2 class="text-3xl font-serif font-bold text-taupe mt-2">Fasilitas Sekolah</h2>
+                        </div>
+                        <p class="text-gray-500 text-sm max-w-sm mt-4 md:mt-0 w-full md:w-auto">Fasilitas lengkap untuk menunjang kenyamanan dan keberhasilan proses belajar mengajar.</p>
+                    </div>
+
+                    <!-- DESKTOP GRID VIEW -->
+                    <div class="hidden lg:grid grid-cols-4 gap-6">
+                        <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="snowflake" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Ruang Ber-AC</h4>
+                            <p class="text-xs text-gray-500">Nyaman & Kondusif</p>
+                        </div>
+                        <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-amber-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="languages" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Lab Bahasa</h4>
+                            <p class="text-xs text-gray-500">Audio Visual Modern</p>
+                        </div>
+                         <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-indigo-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="presentation" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Auditorium</h4>
+                            <p class="text-xs text-gray-500">Aula Serbaguna</p>
+                        </div>
+                        <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-green-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="flask-conical" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Lab Sains</h4>
+                            <p class="text-xs text-gray-500">Praktikum Lengkap</p>
+                        </div>
+                        <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-purple-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="monitor" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Lab Komputer</h4>
+                            <p class="text-xs text-gray-500">Multimedia Modern</p>
+                        </div>
+                        <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-red-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">UKS</h4>
+                            <p class="text-xs text-gray-500">Layanan Kesehatan</p>
+                        </div>
+                         <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-orange-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="utensils" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Kantin Sehat</h4>
+                            <p class="text-xs text-gray-500">Halal & Higienis</p>
+                        </div>
+                         <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-cyan-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="trees" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Ruang Outdoor</h4>
+                            <p class="text-xs text-gray-500">Area Hijau & Bermain</p>
+                        </div>
+                        <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-teal-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="school" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Ruang Kelas</h4>
+                            <p class="text-xs text-gray-500">Modern & Interaktif</p>
+                        </div>
+                         <div class="group p-6 rounded-2xl border border-gray-100 hover:border-karamina hover:shadow-lg transition cursor-default bg-taupe-bg/30">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-600 mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="car" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-taupe mb-1">Area Parkir</h4>
+                            <p class="text-xs text-gray-500">Luas & Aman</p>
+                        </div>
+                    </div>
+
+                    <!-- MOBILE DETAIL LIST VIEW (Windows 11 Style) -->
+                    <div class="lg:hidden bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="snowflake" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Ruang Ber-AC</h4><p class="text-xs text-gray-500 mt-0.5">Dingin & nyaman</p></div>
+                        </div>
+                        <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="languages" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Lab Bahasa</h4><p class="text-xs text-gray-500 mt-0.5">Audio Visual</p></div>
+                        </div>
+                        <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="presentation" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Auditorium</h4><p class="text-xs text-gray-500 mt-0.5">Aula Serbaguna</p></div>
+                        </div>
+                        <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="flask-conical" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Laboratorium Sains</h4><p class="text-xs text-gray-500 mt-0.5">Fisika, Kimia</p></div>
+                        </div>
+                        <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="monitor" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Lab Komputer</h4><p class="text-xs text-gray-500 mt-0.5">PC spek tinggi</p></div>
+                        </div>
+                         <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-cyan-50 text-cyan-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="trees" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Ruang Outdoor</h4><p class="text-xs text-gray-500 mt-0.5">Area Hijau</p></div>
+                        </div>
+                         <div class="win11-list-item flex items-center gap-4 p-4 border-b border-gray-100 last:border-0 cursor-pointer">
+                            <div class="w-10 h-10 bg-slate-50 text-slate-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="car" class="w-5 h-5"></i></div>
+                            <div class="flex-grow"><h4 class="font-bold text-taupe text-sm">Area Parkir</h4><p class="text-xs text-gray-500 mt-0.5">Luas & Aman</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ================= PAGE: PROFIL (Dipindahkan ke Tab Sendiri) ================= -->
+        <div id="profile" class="page-section bg-white">
+            <div class="bg-taupe text-white py-12 lg:py-20 px-6 text-center">
+                <h1 class="text-2xl lg:text-4xl font-serif font-bold mb-2 lg:mb-4">Tentang Kami</h1>
+                <p class="text-gray-300 text-sm lg:text-base max-w-2xl mx-auto">Mengenal lebih dekat sejarah, visi, dan misi Al-Karamina.</p>
+            </div>
+            <div class="container mx-auto px-6 py-12">
+                <div class="flex flex-col md:flex-row gap-12 items-center">
+                    <div class="md:w-1/2">
+                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="rounded-2xl shadow-2xl w-full">
+                    </div>
+                    <div class="md:w-1/2">
+                        <h2 class="text-2xl font-serif font-bold mb-4 text-taupe">Sejarah Singkat</h2>
+                        <p class="text-gray-600 mb-6 leading-relaxed text-sm lg:text-base">
+                            Al-Karamina Islamic Science School didirikan dengan semangat untuk mencetak generasi muslim yang tidak hanya hafal Al-Qur'an, tetapi juga menguasai ilmu pengetahuan dan teknologi. Kami percaya bahwa integrasi antara iman dan ilmu adalah kunci kejayaan peradaban.
+                        </p>
                         
-                        // Trigger teks dan tahan selama 2 detik
-                        if (!showText) {
-                            setShowText(true);
-                            if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
-                            textTimeoutRef.current = setTimeout(() => {
-                                setShowText(false);
-                            }, 2000); // Teks bertahan 2 detik
-                        }
-
-                        const angle = Math.atan2(dy, dx);
-                        const moveX = Math.cos(angle) * 20; 
-                        const moveY = Math.sin(angle) * 20;
-                        setPosition(prev => ({ x: prev.x - moveX, y: prev.y - moveY }));
-                    } else {
-                        setIsFleeing(false);
-                        setPosition(prev => ({
-                            x: prev.x + (wanderTarget.x - prev.x) * 0.02,
-                            y: prev.y + (wanderTarget.y - prev.y) * 0.02
-                        }));
-                    }
-                };
-                
-                window.addEventListener('mousemove', handleMouseMove);
-                window.addEventListener('touchmove', handleMouseMove); // Support touch for mobile
-                
-                return () => {
-                    window.removeEventListener('mousemove', handleMouseMove);
-                    window.removeEventListener('touchmove', handleMouseMove);
-                };
-            }, [position, wanderTarget, showText]);
-
-            const botColor = colorOverride ? colorOverride : (theme === 'matrix' ? '#4ade80' : '#3b82f6');
-            const glowColor = `0 0 15px ${botColor}`;
-
-            return (
-                <motion.div 
-                    className="fixed z-50 pointer-events-none block" // Removed hidden md:block, now visible on mobile
-                    animate={{ 
-                        x: position.x - 30, // Centering adjustments
-                        y: position.y - 30,
-                        y: [position.y - 30, position.y - 40, position.y - 30],
-                        rotate: isFleeing ? [0, 15, -15, 0] : [0, 5, -5, 0],
-                    }}
-                    transition={{ 
-                        y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                        rotate: { duration: isFleeing ? 0.5 : 4, repeat: Infinity, ease: "easeInOut" }
-                    }}
-                >
-                    <div className="relative w-16 h-16 md:w-20 md:h-20"> {/* Slightly smaller on mobile */}
-                        {/* Propellers */}
-                        <div className="absolute top-0 left-0 w-8 h-8 flex items-center justify-center"><div className="w-8 md:w-10 h-1 bg-gray-400 spin-fast rounded-full opacity-50"></div></div>
-                        <div className="absolute top-0 right-0 w-8 h-8 flex items-center justify-center"><div className="w-8 md:w-10 h-1 bg-gray-400 spin-fast rounded-full opacity-50"></div></div>
-                        <div className="absolute bottom-0 left-0 w-8 h-8 flex items-center justify-center"><div className="w-8 md:w-10 h-1 bg-gray-400 spin-fast rounded-full opacity-50"></div></div>
-                        <div className="absolute bottom-0 right-0 w-8 h-8 flex items-center justify-center"><div className="w-8 md:w-10 h-1 bg-gray-400 spin-fast rounded-full opacity-50"></div></div>
-
-                        {/* Cross Frame */}
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 md:w-16 h-2 bg-gray-700 rotate-45 rounded"></div>
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 md:w-16 h-2 bg-gray-700 -rotate-45 rounded"></div>
-
-                        {/* Body */}
-                        <div 
-                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 md:w-10 h-8 md:h-10 rounded-xl flex items-center justify-center bg-gray-900 border-2 z-10"
-                            style={{ borderColor: botColor, boxShadow: glowColor }}
-                        >
-                            <div className="w-full flex justify-center gap-1">
-                                <motion.div animate={{ height: [4, 1, 4] }} transition={{ repeat: Infinity, duration: 3, delay: Math.random() }} className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full" style={{ backgroundColor: botColor }}></motion.div>
-                                <motion.div animate={{ height: [4, 1, 4] }} transition={{ repeat: Infinity, duration: 3, delay: Math.random() }} className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full" style={{ backgroundColor: botColor }}></motion.div>
+                        <div class="space-y-6">
+                            <div class="bg-taupe-bg p-6 rounded-xl border border-gray-100">
+                                <h4 class="font-bold text-taupe text-lg flex items-center gap-2 mb-2"><i data-lucide="target" class="text-karamina w-5 h-5"></i> Visi</h4>
+                                <p class="text-gray-600 text-sm italic">"Menjadi lembaga pendidikan Islam terdepan dalam mencetak pemimpin masa depan yang Qur'ani, Berwawasan Global, dan Menguasai IPTEK."</p>
+                            </div>
+                            <div class="bg-taupe-bg p-6 rounded-xl border border-gray-100">
+                                <h4 class="font-bold text-taupe text-lg flex items-center gap-2 mb-2"><i data-lucide="list-todo" class="text-karamina w-5 h-5"></i> Misi</h4>
+                                <ul class="space-y-2 text-sm text-gray-600 list-none">
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-karamina mt-0.5"></i> Pendidikan berkualitas berbasis Tauhid.</li>
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-karamina mt-0.5"></i> Pengembangan potensi akademik & non-akademik.</li>
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-karamina mt-0.5"></i> Lingkungan sekolah islami & modern.</li>
+                                </ul>
                             </div>
                         </div>
-
-                        <motion.div 
-                            className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-8 md:w-10 h-2 bg-black/20 blur-md rounded-full"
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-                            transition={{ duration: 0.5, repeat: Infinity }}
-                        />
                     </div>
-                    
-                    <AnimatePresence>
-                        {showText && (
-                            <motion.div 
-                                initial={{ opacity: 0, scale: 0, y: 10 }} 
-                                animate={{ opacity: 1, scale: 1, y: 0 }} 
-                                exit={{ opacity: 0, scale: 0.8 }}
-                                className={`absolute top-[-35px] left-1/2 transform -translate-x-1/2 text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap z-50 ${theme === 'matrix' ? 'bg-green-500 text-black' : 'bg-white text-slate-800 border border-gray-200'}`}
-                            >
-                                {["Eits!", "Minggir bang!", "Waduh!", "Sinyal ilang!", "Jangan nabrak!"][Math.floor(Math.random()*5)]}
-                                {/* Panah kecil bawah bubble */}
-                                <div className={`absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 ${theme === 'matrix' ? 'bg-green-500' : 'bg-white border-r border-b border-gray-200'}`}></div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </motion.div>
-            );
-        };
+                </div>
+            </div>
+        </div>
 
-        // --- FLOATING SERVICE CARD ---
-        const FloatingCard = ({ type, x, y, delay, isMatrix, onClick }) => {
-            const data = modalContent[type];
-            const iconColor = isMatrix ? 'text-green-400' : 'text-blue-600';
-            const bgClass = isMatrix ? 'bg-black/90 border-green-500' : 'bg-white/95 border-blue-200';
+        <!-- ================= PAGE: BLOG / GALERI / BERITA ================= -->
+        <div id="blog" class="page-section bg-gray-50">
+            <!-- Header Galeri & Berita -->
+             <div class="bg-white py-12 lg:py-16 px-6 text-center border-b border-gray-100">
+                <h1 class="text-2xl lg:text-4xl font-serif font-bold mb-2 lg:mb-4 text-taupe">Galeri & Berita</h1>
+                <p class="text-gray-500 text-sm lg:text-base">Dokumentasi kegiatan dan informasi terkini dari Al-Karamina.</p>
+            </div>
 
-            // Menggunakan useMemo agar nilai random TIDAK berubah saat re-render
-            // Ini mencegah animasi reset/patah-patah saat ada state update di parent
-            const randomDuration = useMemo(() => 8 + Math.random() * 4, []);
-
-            return (
-                <motion.div
-                    className={`absolute p-4 md:p-5 rounded-2xl shadow-2xl border cursor-pointer backdrop-blur-md group z-20 w-40 md:w-56 ${bgClass}`} // Adjusted width for mobile
-                    style={{ left: x, top: y }}
-                    animate={{ 
-                        y: [0, -20, 15, 0], 
-                        x: [0, 10, -10, 0],
-                        rotate: [0, 1, -1, 0]
-                    }} 
-                    transition={{ 
-                        duration: randomDuration, 
-                        repeat: Infinity, 
-                        delay: delay, 
-                        ease: "easeInOut" 
-                    }}
-                    whileHover={{ scale: 1.1, zIndex: 50, rotate: 0 }}
-                    onClick={() => onClick(type)}
-                >
-                    <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
-                        <div className={`p-2 md:p-2.5 rounded-xl bg-opacity-20 ${isMatrix ? 'bg-green-500' : 'bg-blue-100'}`}>
-                            <i data-lucide={data.icon} className={iconColor} width="18" height="18"></i>
-                        </div>
-                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse ml-auto shadow-[0_0_10px_#4ade80]"></div>
+            <!-- Bagian 1: Galeri (Ditaruh di Atas) -->
+            <div class="container mx-auto px-6 py-12">
+                <div class="flex items-center gap-3 mb-6">
+                     <div class="w-1 h-8 bg-karamina rounded-full"></div>
+                     <h2 class="text-2xl font-serif font-bold text-taupe">Galeri Kegiatan</h2>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                    <div class="md:col-span-2 md:row-span-2 h-64 md:h-80 rounded-xl overflow-hidden shadow-lg group relative cursor-pointer" onclick="openLightbox(0)">
+                        <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="gallery-img w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold"><i data-lucide="zoom-in" class="w-8 h-8"></i></div>
                     </div>
-                    <h3 className={`font-bold text-xs md:text-base ${isMatrix ? 'text-white' : 'text-gray-900'}`}>{data.title}</h3>
-                    <p className={`hidden md:block text-xs mt-2 ${isMatrix ? 'text-gray-400' : 'text-gray-500'}`}>Klik untuk detail layanan</p>
-                    <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-[0_0_30px_rgba(59,130,246,0.4)]`}></div>
-                </motion.div>
-            );
-        };
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-lg group relative cursor-pointer" onclick="openLightbox(1)">
+                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="gallery-img w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-lg group relative cursor-pointer" onclick="openLightbox(2)">
+                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="gallery-img w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-lg group relative cursor-pointer" onclick="openLightbox(3)">
+                        <img src="https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="gallery-img w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-lg group relative cursor-pointer" onclick="openLightbox(4)">
+                        <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="gallery-img w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                </div>
+            </div>
 
-        // --- MODAL COMPONENT ---
-        const ServiceModal = ({ content, onClose, isMatrix }) => {
-            if (!content) return null;
-            return (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-                    <motion.div 
-                        initial={{ scale: 0.8, opacity: 0, y: 50 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.8, opacity: 0 }}
-                        className={`relative w-full max-w-lg p-6 md:p-8 rounded-3xl border shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden max-h-[90vh] overflow-y-auto ${isMatrix ? 'bg-gray-900 border-green-500 text-green-50' : 'bg-white border-blue-100 text-gray-800'}`}
-                    >
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className={`p-4 rounded-2xl ${isMatrix ? 'bg-green-900/30 text-green-400' : 'bg-blue-50 text-blue-600'}`}>
-                                <i data-lucide={content.icon} width="36" height="36"></i>
+            <!-- Bagian 2: Berita (Ditaruh di Bawah) -->
+            <div class="container mx-auto px-6 pb-16">
+                 <div class="flex items-center gap-3 mb-6">
+                     <div class="w-1 h-8 bg-karamina rounded-full"></div>
+                     <h2 class="text-2xl font-serif font-bold text-taupe">Artikel & Berita</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="news-grid">
+                    <!-- Article 1 -->
+                    <article class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="h-48 object-cover">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                                <span>Akademik</span> • <span>10 Des 2024</span>
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold leading-tight">{content.title}</h2>
-                                <p className={`text-sm ${isMatrix ? 'text-gray-400' : 'text-gray-500'}`}>{content.price}</p>
-                            </div>
-                            <button onClick={onClose} className="ml-auto p-2 hover:bg-gray-500/10 rounded-full transition-colors"><i data-lucide="x" width="24"></i></button>
+                            <h3 class="text-lg font-bold text-taupe mb-3 hover:text-karamina transition">Workshop Robotik Nasional</h3>
+                            <p class="text-gray-600 text-xs lg:text-sm line-clamp-3">Siswa-siswi Al-Karamina mengikuti pelatihan robotik tingkat nasional untuk mengembangkan kemampuan STEM sejak dini.</p>
                         </div>
-                        <div className="mb-8">
-                            <p className="mb-4 font-medium text-lg opacity-90">{content.desc}</p>
-                            <ul className="space-y-3">
-                                {content.details.map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-3 text-sm"><i data-lucide="check-circle" width="18" className={`mt-0.5 ${isMatrix?'text-green-500':'text-blue-500'}`}></i><span>{item}</span></li>
-                                ))}
+                        <div class="p-6 pt-0 mt-auto">
+                            <a href="#" class="text-karamina-hover font-bold text-sm hover:underline">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                    <!-- Article 2 -->
+                    <article class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+                        <img src="https://images.unsplash.com/photo-1560785496-ad325f555233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="h-48 object-cover">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                                <span>Prestasi</span> • <span>05 Des 2024</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-taupe mb-3 hover:text-karamina transition">Juara Umum Lomba Pidato Bahasa Arab</h3>
+                            <p class="text-gray-600 text-xs lg:text-sm line-clamp-3">Selamat kepada ananda Farhan yang berhasil menyabet juara umum dalam kompetisi pidato tingkat provinsi.</p>
+                        </div>
+                        <div class="p-6 pt-0 mt-auto">
+                            <a href="#" class="text-karamina-hover font-bold text-sm hover:underline">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                    <!-- Article 3 -->
+                    <article class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+                        <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="h-48 object-cover">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                                <span>Kegiatan</span> • <span>01 Des 2024</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-taupe mb-3 hover:text-karamina transition">Buka Puasa Bersama & Santunan</h3>
+                            <p class="text-gray-600 text-xs lg:text-sm line-clamp-3">Kegiatan rutin tahunan untuk mempererat tali silaturahmi antar warga sekolah dan masyarakat sekitar.</p>
+                        </div>
+                        <div class="p-6 pt-0 mt-auto">
+                            <a href="#" class="text-karamina-hover font-bold text-sm hover:underline">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="loadMoreNews()" class="px-8 py-3 border border-taupe text-taupe rounded-full hover:bg-taupe hover:text-white transition font-medium text-sm">Lihat Berita Lainnya</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE: KONTAK ================= -->
+        <div id="contact" class="page-section bg-white">
+            <div class="bg-taupe text-white py-12 lg:py-16 px-6 text-center">
+                <h1 class="text-2xl lg:text-4xl font-serif font-bold mb-2 lg:mb-4">Hubungi Kami</h1>
+                <p class="text-gray-300 text-sm lg:text-base">Kami siap melayani pertanyaan Anda seputar Al-Karamina.</p>
+            </div>
+            <div class="container mx-auto px-6 py-12 lg:py-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    <!-- Contact Info -->
+                    <div>
+                        <h2 class="text-xl lg:text-2xl font-bold text-taupe mb-6">Informasi Kontak</h2>
+                        <div class="space-y-4 lg:space-y-6">
+                            <div class="flex items-start gap-4 p-4 bg-taupe-bg rounded-lg">
+                                <i data-lucide="map-pin" class="text-karamina w-6 h-6 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-taupe text-sm lg:text-base">Alamat Sekolah</h4>
+                                    <p class="text-gray-600 text-sm">Jl. Raya Kp. Sawah No.49, Jatimulya, Kec. Cilodong, Kota Depok, Jawa Barat 16413</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-taupe-bg rounded-lg">
+                                <i data-lucide="phone" class="text-karamina w-6 h-6 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-taupe text-sm lg:text-base">Telepon & WhatsApp</h4>
+                                    <p class="text-gray-600 text-sm">0811-858-308</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-taupe-bg rounded-lg">
+                                <i data-lucide="mail" class="text-karamina w-6 h-6 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-taupe text-sm lg:text-base">Email</h4>
+                                    <p class="text-gray-600 text-sm">info@karamina.sch.id</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-taupe-bg rounded-lg">
+                                <i data-lucide="clock" class="text-karamina w-6 h-6 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-taupe text-sm lg:text-base">Jam Operasional</h4>
+                                    <p class="text-gray-600 text-sm">Senin - Jumat: 07.00 - 15.00 WIB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Map -->
+                    <div class="h-[300px] lg:h-[400px] bg-gray-200 rounded-xl overflow-hidden relative shadow-md">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.981674485303!2d106.83296231477002!3d-6.396347995371536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ebe40506e789%3A0x63339129596853f3!2sJl.%20Raya%20Kp.%20Sawah%20No.49%2C%20Jatimulya%2C%20Kec.%20Cilodong%2C%20Kota%20Depok%2C%20Jawa%20Barat%2016413!5e0!3m2!1sen!2sid!4v1629876543210!5m2!1sen!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE: PPDB (INFO & WHATSAPP & BIAYA) ================= -->
+        <div id="ppdb" class="page-section bg-gray-50">
+            <div class="bg-karamina text-taupe py-12 lg:py-16 px-6 text-center">
+                <h1 class="text-2xl lg:text-4xl font-serif font-bold mb-2 lg:mb-4">Pendaftaran Siswa Baru</h1>
+                <p class="font-medium text-base lg:text-lg opacity-80">Tahun Ajaran 2025/2026</p>
+            </div>
+            
+            <div class="container mx-auto px-6 py-12 lg:py-16">
+                <!-- Brosur Digital Section -->
+                <div class="mb-16 text-center">
+                    <h2 class="text-xl lg:text-2xl font-bold mb-6 text-taupe">Brosur Informasi</h2>
+                    <div class="flex gap-4 overflow-x-auto pb-4 justify-center md:grid md:grid-cols-3">
+                         <div class="shrink-0 w-64 md:w-full h-80 bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden relative group cursor-pointer" onclick="openDownloadModal('https://via.placeholder.com/600x800?text=Brosur+Depan')">
+                            <img src="https://via.placeholder.com/600x800?text=Brosur+Depan" class="w-full h-full object-cover group-hover:scale-105 transition">
+                             <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                 <span class="bg-white text-taupe px-4 py-2 rounded-full font-bold text-sm shadow">Lihat & Download</span>
+                             </div>
+                        </div>
+                        <div class="shrink-0 w-64 md:w-full h-80 bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden relative group cursor-pointer" onclick="openDownloadModal('https://via.placeholder.com/600x800?text=Program+Unggulan')">
+                            <img src="https://via.placeholder.com/600x800?text=Program+Unggulan" class="w-full h-full object-cover group-hover:scale-105 transition">
+                             <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                 <span class="bg-white text-taupe px-4 py-2 rounded-full font-bold text-sm shadow">Lihat & Download</span>
+                             </div>
+                        </div>
+                        <div class="shrink-0 w-64 md:w-full h-80 bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden relative group cursor-pointer" onclick="openDownloadModal('https://via.placeholder.com/600x800?text=Investasi+Pendidikan')">
+                            <img src="https://via.placeholder.com/600x800?text=Investasi+Pendidikan" class="w-full h-full object-cover group-hover:scale-105 transition">
+                             <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                 <span class="bg-white text-taupe px-4 py-2 rounded-full font-bold text-sm shadow">Lihat & Download</span>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INFO PENDAFTARAN & KONTAK WA (Pengganti Form) -->
+                <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 lg:p-12 mb-12">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl lg:text-3xl font-serif font-bold text-taupe mb-4">Informasi Pendaftaran</h2>
+                        <div class="w-20 h-1 bg-karamina mx-auto rounded-full"></div>
+                    </div>
+
+                    <!-- RINCIAN BIAYA PENDIDIKAN (New Section) -->
+                    <div class="mb-12">
+                        <h3 class="font-bold text-xl text-taupe mb-6 flex items-center gap-2 border-b pb-2">
+                            <i data-lucide="wallet" class="text-karamina w-6 h-6"></i> Estimasi Biaya Pendidikan
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-taupe-bg rounded-lg border border-gray-100">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Formulir Pendaftaran</span>
+                                <div class="text-lg font-bold text-taupe mt-1">Rp 350.000</div>
+                            </div>
+                            <div class="p-4 bg-taupe-bg rounded-lg border border-gray-100">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">SPP Bulanan</span>
+                                <div class="text-lg font-bold text-taupe mt-1">Rp 850.000</div>
+                            </div>
+                            <div class="p-4 bg-taupe-bg rounded-lg border border-gray-100">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Uang Pangkal (Masuk)</span>
+                                <div class="text-lg font-bold text-taupe mt-1">Rp 12.500.000</div>
+                                <p class="text-xs text-gray-400 mt-1">*Termasuk seragam & buku tahun pertama</p>
+                            </div>
+                            <div class="p-4 bg-taupe-bg rounded-lg border border-gray-100">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Kegiatan Tahunan</span>
+                                <div class="text-lg font-bold text-taupe mt-1">Rp 2.000.000</div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-red-500 mt-4 italic">* Biaya dapat berubah sewaktu-waktu. Silakan konfirmasi dengan admin.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Syarat -->
+                        <div>
+                            <h3 class="font-bold text-xl text-taupe mb-4 flex items-center gap-2">
+                                <span class="w-8 h-8 bg-karamina text-taupe rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                                Syarat Pendaftaran
+                            </h3>
+                            <ul class="space-y-3 text-gray-600 text-sm">
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500 mt-1"></i> Usia mencukupi sesuai jenjang pendidikan.</li>
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500 mt-1"></i> Sehat jasmani dan rohani.</li>
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500 mt-1"></i> Mengisi formulir pendaftaran.</li>
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500 mt-1"></i> Bersedia mengikuti tata tertib sekolah.</li>
                             </ul>
                         </div>
-                        <a href={`https://wa.me/6285157362339?text=Halo%20NexArch,%20saya%20ingin%20tanya%20detail%20tentang%20${encodeURIComponent(content.title)}`} target="_blank" className={`block w-full text-center py-4 rounded-xl font-bold text-lg transition-all hover:scale-[1.02] shadow-lg ${isMatrix ? 'bg-green-500 text-black hover:bg-green-400 hover:shadow-green-500/50' : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-blue-500/30'}`}>
-                            Pesan Layanan Ini
-                        </a>
-                    </motion.div>
-                </div>
-            );
-        };
-
-        const services = [
-            { title: "Smartphone Expert", desc: "15+ Tahun pengalaman. Ganti LCD, Baterai, Mati Total.", icon: "Smartphone" },
-            { title: "Web & App Dev", desc: "Landing page, Company Profile, hingga Sistem kompleks.", icon: "Code" },
-            { title: "Laptop & PC Care", desc: "Service hardware, install ulang, upgrade SSD/RAM.", icon: "Monitor" },
-            { title: "CCTV & Network", desc: "Instalasi CCTV, Setting Mikrotik, Jaringan Kantor.", icon: "Wifi" },
-            { title: "Sistem Kasir (POS)", desc: "Aplikasi kasir modern untuk F&B dan Retail.", icon: "Server" },
-            { title: "Software Architect", desc: "Konsultasi sistem IT perusahaan.", icon: "Cpu" },
-        ];
-
-        const stats = [
-            { val: "15+", label: "Tahun Pengalaman", icon: "Clock" },
-            { val: "1000+", label: "Device Diperbaiki", icon: "Smartphone" },
-            { val: "50+", label: "Sistem Dideploy", icon: "Globe" },
-            { val: "24/7", label: "Support Mindset", icon: "Heart" },
-        ];
-
-        const faqs = [
-            { q: "Berapa lama pengerjaan service HP?", a: "Untuk kerusakan ringan (LCD/Baterai) bisa ditunggu 30-60 menit. Untuk mati total butuh pengecekan 1-3 hari." },
-            { q: "Apakah pembuatan website dapat domain gratis?", a: "Ya! Paket standard kami sudah termasuk Domain .com dan Hosting selama 1 tahun." },
-            { q: "Bisa panggil teknisi ke rumah/kantor?", a: "Bisa banget untuk area terjangkau. Terutama untuk setting jaringan dan CCTV." },
-            { q: "Garansinya bagaimana?", a: "Hardware repair garansi hingga 30 hari. Software development garansi bug fixing 3-6 bulan." },
-        ];
-
-        // --- MAIN APP COMPONENT ---
-        const App = () => {
-            const [theme, setTheme] = useState('intro'); 
-            const [activeFaq, setActiveFaq] = useState(null);
-            const [modalData, setModalData] = useState(null);
-            
-            // --- DETEKSI MOBILE / DESKTOP ---
-            const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-            useEffect(() => {
-                const handleResize = () => {
-                    setIsMobile(window.innerWidth < 768);
-                };
-                window.addEventListener('resize', handleResize);
-                return () => window.removeEventListener('resize', handleResize);
-            }, []);
-            
-            useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
-
-            if (theme === 'intro') {
-                return (
-                    <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden font-sans bg-gray-100 md:bg-transparent">
-                        
-                        {/* CARD STYLE SELECTION FOR MOBILE */}
-                        <div className="md:hidden w-full h-full p-6 flex flex-col gap-6 justify-center">
-                            <h2 className="text-2xl font-bold text-center mb-2 text-slate-800">Pilih Tampilan Anda</h2>
-                            
-                            {/* Pro Card */}
-                            <motion.div 
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setTheme('pro')}
-                                className="flex-1 bg-white rounded-3xl shadow-xl flex flex-col items-center justify-center p-6 border border-gray-100 relative overflow-hidden"
-                            >
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full z-0"></div>
-                                <div className="relative z-10 text-center">
-                                    <div className="bg-blue-100 p-4 rounded-full inline-flex text-blue-600 mb-4"><i data-lucide="shield-check" width="40" height="40"></i></div>
-                                    <h3 className="text-2xl font-bold text-slate-800">Profesional</h3>
-                                    <p className="text-sm text-slate-500 mt-2">Untuk Bisnis & Korporat</p>
-                                </div>
-                            </motion.div>
-
-                            {/* Matrix Card */}
-                            <motion.div 
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setTheme('matrix')}
-                                className="flex-1 bg-black rounded-3xl shadow-xl flex flex-col items-center justify-center p-6 border border-green-900 relative overflow-hidden"
-                            >
-                                <div className="absolute inset-0 opacity-20"><MatrixRain /></div>
-                                <div className="relative z-10 text-center">
-                                    <div className="bg-green-900/40 p-4 rounded-full inline-flex text-green-500 mb-4"><i data-lucide="code" width="40" height="40"></i></div>
-                                    <h3 className="text-2xl font-bold text-green-500 matrix-font">MATRIX</h3>
-                                    <p className="text-sm text-green-800 mt-2">Tech & Gamer Style</p>
-                                </div>
-                            </motion.div>
-                        </div>
-
-                        {/* DESKTOP SPLIT SCREEN (Original) */}
-                        <div onClick={() => setTheme('pro')} className="hidden md:flex w-1/2 h-full bg-white flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors duration-500 group relative z-10">
-                            <h2 className="text-4xl font-bold text-gray-900 mb-4 group-hover:scale-110 transition-transform">Profesional</h2>
-                            <p className="text-gray-500 text-center px-4">Clean. Elegan. Corporate.</p>
-                            <div className="mt-8 p-4 rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i data-lucide="shield-check" width="48" height="48"></i></div>
-                        </div>
-                        <div onClick={() => setTheme('matrix')} className="hidden md:flex w-1/2 h-full bg-black flex-col items-center justify-center cursor-pointer hover:bg-gray-900 transition-colors duration-500 group relative border-l border-gray-800">
-                            <MatrixRain />
-                            <h2 className="text-4xl font-bold text-green-500 mb-4 font-mono group-hover:scale-110 transition-transform z-10 glitch-text" data-text="MATRIX MODE">MATRIX MODE</h2>
-                            <p className="text-green-800 text-center px-4 font-mono z-10">Cyber. Canggih. Hacker Vibe.</p>
-                            <div className="mt-8 p-4 rounded-full bg-green-900/30 text-green-500 group-hover:bg-green-500 group-hover:text-black transition-colors z-10"><i data-lucide="code" width="48" height="48"></i></div>
+                        <!-- Berkas -->
+                        <div>
+                            <h3 class="font-bold text-xl text-taupe mb-4 flex items-center gap-2">
+                                <span class="w-8 h-8 bg-karamina text-taupe rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                                Berkas Diperlukan
+                            </h3>
+                            <ul class="space-y-3 text-gray-600 text-sm">
+                                <li class="flex items-start gap-2"><i data-lucide="file-text" class="w-4 h-4 text-blue-500 mt-1"></i> Fotokopi Akta Kelahiran (2 lembar).</li>
+                                <li class="flex items-start gap-2"><i data-lucide="file-text" class="w-4 h-4 text-blue-500 mt-1"></i> Fotokopi Kartu Keluarga (2 lembar).</li>
+                                <li class="flex items-start gap-2"><i data-lucide="file-text" class="w-4 h-4 text-blue-500 mt-1"></i> Fotokopi KTP Orang Tua.</li>
+                                <li class="flex items-start gap-2"><i data-lucide="file-text" class="w-4 h-4 text-blue-500 mt-1"></i> Pas Foto 3x4 (4 lembar).</li>
+                            </ul>
                         </div>
                     </div>
-                );
-            }
 
-            const isMatrix = theme === 'matrix';
-            const bgColor = isMatrix ? 'bg-black' : 'bg-slate-50';
-            const textColor = isMatrix ? 'text-green-500' : 'text-slate-800';
-            const cardBg = isMatrix ? 'bg-gray-900/80 border border-green-500/30' : 'bg-white shadow-lg border border-gray-100';
-            const accentColor = isMatrix ? 'text-green-400' : 'text-blue-600';
-            const waLink = "https://wa.me/6285157362339?text=Halo%20NexArch,%20saya%20tertarik%20dengan%20layanan%20Anda.";
+                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-100 text-center">
+                        <h3 class="font-bold text-lg text-taupe mb-2">Punya Pertanyaan atau Ingin Mendaftar?</h3>
+                        <p class="text-gray-600 text-sm mb-6 max-w-lg mx-auto">Silakan hubungi panitia PPDB kami melalui WhatsApp untuk informasi lebih lanjut mengenai biaya, kuota, dan teknis pendaftaran.</p>
+                        
+                        <a href="https://wa.me/62811858308?text=Assalamu%27alaikum%20Admin%20Al-Karamina%2C%20saya%20tertarik%20untuk%20mendaftar%20PPDB%20Tahun%20Ajaran%20Baru%2E%20Mohon%20informasinya%2E" target="_blank" class="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full font-bold transition transform hover:-translate-y-1 shadow-lg group">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                            <span>Chat WhatsApp Admin PPDB</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                        </a>
+                        <p class="text-xs text-gray-400 mt-3">*Anda akan diarahkan ke chat WhatsApp resmi sekolah.</p>
+                    </div>
 
-            return (
-                <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-700 relative overflow-x-hidden ${isMatrix ? 'matrix-font' : 'pro-font'}`}>
-                    <AnimatePresence>
-                        {modalData && <ServiceModal content={modalContent[modalData]} onClose={() => setModalData(null)} isMatrix={isMatrix} />}
-                    </AnimatePresence>
-
-                    {isMatrix && <MatrixRain />}
-                    {!isMatrix && (
-                        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                            <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-200/40 rounded-full blur-3xl"></div>
-                            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-purple-200/40 rounded-full blur-3xl"></div>
-                        </div>
-                    )}
-
-                    {/* DRONE BOTS */}
-                    <DroneBot theme={theme} initialX={window.innerWidth / 2} initialY={100} delay={0} />
-                    <DroneBot theme={theme} initialX={window.innerWidth - 100} initialY={500} delay={2000} colorOverride="#f97316" />
-
-                    {/* Navbar */}
-                    <nav className={`fixed w-full z-40 top-0 left-0 backdrop-blur-md ${isMatrix ? 'bg-black/80 border-b border-green-900' : 'bg-white/80 border-b border-gray-200'} px-6 py-4 flex justify-between items-center`}>
-                        <div className="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2">
-                            <div className={`w-3 h-3 rounded-full ${isMatrix ? 'bg-green-500 animate-pulse' : 'bg-blue-600'}`}></div>
-                            NexArch<span className={isMatrix ? 'text-white' : 'text-gray-400'}>Digital</span>
-                        </div>
-                        <div className="flex items-center gap-3 md:gap-4">
-                            <a href={waLink} target="_blank" className={`hidden md:block px-4 py-2 rounded-full font-bold text-sm transition-all ${isMatrix ? 'bg-green-600 text-black hover:bg-green-400' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>Contact</a>
-                            <button onClick={() => setTheme(isMatrix ? 'pro' : 'matrix')} className="p-2 rounded-full border border-current hover:opacity-70 transition-opacity"><i data-lucide="settings" width="20"></i></button>
-                        </div>
-                    </nav>
-
-                    {/* Hero Section */}
-                    <section className="relative z-10 pt-28 md:pt-32 pb-20 px-6 min-h-screen flex items-center justify-center overflow-visible">
-                        <div className="max-w-7xl w-full grid md:grid-cols-2 gap-10 md:gap-20 items-center">
-                            
-                            {/* Text Content */}
-                            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="text-center md:text-left z-20">
-                                <div className={`inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-wider uppercase rounded-full ${isMatrix ? 'bg-green-900 text-green-300 border border-green-500' : 'bg-blue-100 text-blue-700'}`}>
-                                    Hardware Expert & Software Architect
-                                </div>
-                                <h1 className={`text-5xl md:text-8xl font-black mb-6 md:mb-8 leading-none tracking-tight ${isMatrix ? 'glitch-text' : ''}`} data-text="FUTURE READY">
-                                    Solusi IT <br/>
-                                    <span className={accentColor}>Masa Depan.</span>
-                                </h1>
-                                <p className={`text-base md:text-xl mb-8 md:mb-10 max-w-lg mx-auto md:mx-0 leading-relaxed ${isMatrix ? 'text-green-800' : 'text-gray-600'}`}>
-                                    Menggabungkan presisi hardware dengan kecerdasan software. Kami memperbaiki, membangun, dan mengamankan aset digital Anda.
-                                </p>
-                                <div className="flex justify-center md:justify-start gap-4">
-                                    <a href="#services" className={`px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold transition-all text-sm md:text-base ${isMatrix ? 'border border-green-500 hover:bg-green-500 hover:text-black' : 'bg-slate-900 text-white hover:bg-slate-800'}`}>Lihat Layanan</a>
-                                    <a href={waLink} className={`px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold flex items-center gap-2 transition-all text-sm md:text-base ${isMatrix ? 'text-green-500 hover:text-white' : 'text-slate-900 hover:text-blue-600'}`}>Konsultasi <i data-lucide="arrow-right" width="16"></i></a>
-                                </div>
-                            </motion.div>
-
-                            {/* TECH REACTOR VISUAL - NOW OPTIMIZED FOR MOBILE */}
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="relative flex justify-center h-[400px] md:h-[500px] scale-75 md:scale-100 origin-center md:origin-center mt-[-40px] md:mt-0">
-                                <div className="relative w-[500px] h-[500px] flex items-center justify-center">
-                                    {/* Rotating Rings */}
-                                    <div className={`absolute w-full h-full border-[1px] rounded-full animate-[spin_10s_linear_infinite] ${isMatrix ? 'border-green-500/20' : 'border-blue-300/30'}`}></div>
-                                    <div className={`absolute w-[80%] h-[80%] border-[2px] border-dashed rounded-full animate-[spin_15s_linear_infinite_reverse] ${isMatrix ? 'border-green-500/30' : 'border-blue-400/30'}`}></div>
-                                    <div className={`absolute w-[60%] h-[60%] border-[4px] border-dotted rounded-full animate-[spin_20s_linear_infinite] ${isMatrix ? 'border-green-500/40' : 'border-blue-500/20'}`}></div>
-                                    
-                                    {/* Core Glow */}
-                                    <div className={`w-32 h-32 rounded-full blur-[50px] animate-pulse ${isMatrix ? 'bg-green-500/40' : 'bg-blue-500/40'}`}></div>
-                                    <div className={`relative z-10 font-black text-2xl tracking-widest animate-pulse ${isMatrix ? 'text-green-500' : 'text-blue-600'}`}>NEXARCH</div>
-
-                                    {/* Floating Cards - SMART POSITIONING: CLOSE ON MOBILE, WIDE ON DESKTOP */}
-                                    <FloatingCard 
-                                        type="smartphone" 
-                                        x={isMobile ? "5%" : "-20%"} 
-                                        y={isMobile ? "5%" : "10%"} 
-                                        delay={0} isMatrix={isMatrix} onClick={setModalData} 
-                                    />
-                                    <FloatingCard 
-                                        type="webdev" 
-                                        x={isMobile ? "50%" : "65%"} 
-                                        y={isMobile ? "-5%" : "5%"} 
-                                        delay={1.5} isMatrix={isMatrix} onClick={setModalData} 
-                                    />
-                                    <FloatingCard 
-                                        type="network" 
-                                        x={isMobile ? "25%" : "30%"} 
-                                        y={isMobile ? "65%" : "75%"} 
-                                        delay={2.8} isMatrix={isMatrix} onClick={setModalData} 
-                                    />
-                                </div>
-                            </motion.div>
-                        </div>
-                    </section>
-
-                    {/* Stats Section */}
-                    <section className="relative z-10 py-16 px-6">
-                        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-                            {stats.map((stat, idx) => (
-                                <motion.div 
-                                    key={idx}
-                                    whileHover={{ y: -10, rotateX: 5, rotateY: 5, scale: 1.05 }}
-                                    className={`p-6 rounded-2xl border text-center relative overflow-hidden group transition-all duration-300 ${isMatrix ? 'bg-black/50 border-green-900 hover:border-green-500' : 'bg-white border-gray-100 shadow-xl hover:shadow-2xl'}`}
-                                >
-                                    <div className={`mb-4 inline-flex p-3 rounded-full heartbeat ${isMatrix ? 'bg-green-900/50 text-green-400' : 'bg-blue-50 text-blue-600'}`}>
-                                        <i data-lucide={stat.icon} width="24" height="24"></i>
-                                    </div>
-                                    <h3 className={`text-2xl md:text-4xl font-black mb-1 ${isMatrix ? 'text-white' : 'text-gray-900'}`}>{stat.val}</h3>
-                                    <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${isMatrix ? 'text-green-600' : 'text-gray-400'}`}>{stat.label}</p>
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* Services Section */}
-                    <section id="services" className="relative z-10 py-24 px-6">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="mb-16 text-center">
-                                <h2 className="text-3xl md:text-5xl font-bold mb-4">Layanan Kami</h2>
-                                <p className={`max-w-2xl mx-auto ${isMatrix ? 'text-green-700' : 'text-gray-600'}`}>Solusi teknologi dari A sampai Z.</p>
-                            </div>
-                            <div className="grid md:grid-cols-3 gap-6">
-                                {services.map((service, idx) => (
-                                    <motion.div key={idx} whileHover={{ y: -10 }} className={`p-8 rounded-2xl relative overflow-hidden group ${cardBg}`}>
-                                        <div className={`mb-6 p-4 rounded-xl inline-block ${isMatrix ? 'bg-green-900/30 text-green-400' : 'bg-blue-50 text-blue-600'}`}><i data-lucide={service.icon} width="32" height="32"></i></div>
-                                        <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-                                        <p className={`text-sm leading-relaxed ${isMatrix ? 'text-green-800 group-hover:text-green-500' : 'text-gray-500'}`}>{service.desc}</p>
-                                        <div className={`absolute bottom-0 left-0 h-1 w-0 group-hover:w-full transition-all duration-500 ${isMatrix ? 'bg-green-500' : 'bg-blue-600'}`}></div>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Products Showcase */}
-                    <section className={`relative z-10 py-24 px-6 ${isMatrix ? 'bg-green-900/10' : 'bg-gray-50'}`}>
-                        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-center">
-                            <div className="md:w-1/2">
-                                <h2 className="text-3xl md:text-4xl font-bold mb-6">Produk Digital</h2>
-                                <div className="space-y-6">
-                                    {[{ name: "HRIS Connect", desc: "Sistem manajemen karyawan & payroll." }, { name: "Resto POS", desc: "Kasir pintar terintegrasi." }, { name: "Asset Mgmt", desc: "Tracking aset perusahaan." }].map((item, idx) => (
-                                        <div key={idx} className={`p-4 rounded-lg border-l-4 ${isMatrix ? 'border-green-500 bg-black/50' : 'border-blue-600 bg-white shadow-sm'}`}>
-                                            <h4 className="font-bold text-lg">{item.name}</h4>
-                                            <p className={`text-sm ${isMatrix ? 'text-green-800' : 'text-gray-500'}`}>{item.desc}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="md:w-1/2 relative">
-                                <div className={`relative p-8 rounded-xl border ${isMatrix ? 'bg-black border-green-500' : 'bg-white border-gray-200 shadow-xl'}`}>
-                                    <div className="flex items-center gap-2 mb-4 border-b pb-4 border-gray-100/10">
-                                        <div className="w-3 h-3 rounded-full bg-red-500"></div><div className="w-3 h-3 rounded-full bg-yellow-500"></div><div className="w-3 h-3 rounded-full bg-green-500"></div>
-                                    </div>
-                                    <div className="space-y-4 font-mono text-sm opacity-80">
-                                        <div className="flex justify-between"><span>Status</span><span className="text-green-500">ONLINE</span></div>
-                                        <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden"><div className="h-full bg-green-500 w-3/4"></div></div>
-                                        <p className="mt-4 italic">"System 100% Secure."</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* FAQ */}
-                    <section className="relative z-10 py-24 px-6">
-                        <div className="max-w-3xl mx-auto space-y-4">
-                            <h2 className="text-3xl font-bold mb-12 text-center">FAQ</h2>
-                            {faqs.map((faq, idx) => (
-                                <div key={idx} className={`border rounded-lg overflow-hidden transition-all duration-300 ${isMatrix ? 'border-green-800' : 'border-gray-200'}`} onMouseEnter={() => setActiveFaq(idx)} onMouseLeave={() => setActiveFaq(null)}>
-                                    <div className={`p-4 font-bold cursor-pointer flex justify-between items-center ${isMatrix ? 'bg-gray-900' : 'bg-white'}`}>{faq.q} <i data-lucide="chevron-down" width="20"></i></div>
-                                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: activeFaq === idx ? 'auto' : 0, opacity: activeFaq === idx ? 1 : 0 }} className={`px-4 ${isMatrix ? 'bg-black text-green-700' : 'bg-gray-50 text-gray-600'}`}><div className="py-4 border-t border-gray-500/10">{faq.a}</div></motion.div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* ULTRA MINIMALIST FOOTER / CTA */}
-                    <footer className={`relative z-10 py-24 px-6 ${isMatrix ? 'bg-black' : 'bg-gray-50'}`}>
-                        <div className="max-w-4xl mx-auto text-center">
-                            {/* Minimalist Header */}
-                            <h2 className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${isMatrix ? 'text-white' : 'text-slate-900'}`}>
-                                Siap untuk <span className={isMatrix ? 'text-green-500' : 'text-blue-600'}>Level Up?</span>
-                            </h2>
-                            <p className={`text-lg mb-10 opacity-70 max-w-xl mx-auto ${isMatrix ? 'text-gray-400' : 'text-slate-600'}`}>
-                                Konsultasikan kebutuhan IT bisnis Anda sekarang. Gratis dan tanpa komitmen.
-                            </p>
-
-                            {/* Ultra Minimalist Button */}
-                            <a 
-                                href={waLink} 
-                                className={`inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-sm tracking-wide transition-all transform hover:scale-105 hover:-translate-y-1 shadow-2xl ${isMatrix ? 'bg-green-500 text-black hover:bg-green-400 hover:shadow-[0_10px_40px_-10px_rgba(74,222,128,0.5)]' : 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-[0_10px_40px_-10px_rgba(30,41,59,0.5)]'}`}
-                            >
-                                <i data-lucide="message-circle" width="18"></i>
-                                <span>Hubungi WhatsApp</span>
-                            </a>
-
-                            <div className="mt-20 pt-10 border-t border-gray-500/10 flex flex-col md:flex-row justify-between items-center text-xs font-mono opacity-40 gap-4">
-                                <div>NEXARCH DIGITAL © 2025</div>
-                                <div className="flex gap-6 tracking-widest">
-                                    <a href="#" className="hover:opacity-100 transition-opacity">INSTAGRAM</a>
-                                    <a href="#" className="hover:opacity-100 transition-opacity">LINKEDIN</a>
-                                    <a href="#" className="hover:opacity-100 transition-opacity">EMAIL</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
-            );
-        };
+            </div>
+        </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+    </main>
+
+    <!-- Main Footer -->
+    <footer class="bg-taupe text-white pt-12 lg:pt-16 pb-24 lg:pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 mb-8 lg:mb-12">
+                <!-- About -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-karamina rounded flex items-center justify-center text-taupe font-serif font-bold text-xl">A</div>
+                        <span class="text-xl font-bold">Al-Karamina</span>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6 max-w-sm">
+                        Sekolah Islam modern yang mengedepankan adab, ilmu, dan teknologi. Mencetak generasi pemimpin yang siap bersaing di era global.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-taupe-light flex items-center justify-center hover:bg-karamina hover:text-taupe transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-taupe-light flex items-center justify-center hover:bg-karamina hover:text-taupe transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-taupe-light flex items-center justify-center hover:bg-karamina hover:text-taupe transition"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <!-- Links (Updated) -->
+                <div class="hidden lg:block">
+                    <h4 class="text-lg font-bold mb-6 text-karamina">Jelajahi</h4>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li><button onclick="showPage('home')" class="hover:text-karamina transition">Beranda</button></li>
+                        <li><button onclick="showPage('profile')" class="hover:text-karamina transition">Tentang Kami</button></li>
+                        <li><button onclick="scrollToFacilities()" class="hover:text-karamina transition">Fasilitas</button></li>
+                        <li><button onclick="showPage('ppdb')" class="hover:text-karamina transition">Info PPDB</button></li>
+                        <li><button onclick="showPage('blog')" class="hover:text-karamina transition">Galeri & Berita</button></li>
+                        <li><button onclick="showPage('contact')" class="hover:text-karamina transition">Kontak</button></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6 text-karamina">Kontak</h4>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-4 h-4 mt-1 text-karamina"></i>
+                            <span>Jl. Raya Kp. Sawah No.49, Depok</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="phone" class="w-4 h-4 text-karamina"></i>
+                            <span>0811-858-308</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="mail" class="w-4 h-4 text-karamina"></i>
+                            <span>info@karamina.sch.id</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-taupe-light/30 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
+                <p>&copy; 2025 Al-Karamina Islamic Science School. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX OVERLAY (Updated with Prev/Next) -->
+    <div id="lightbox" class="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white hover:text-karamina z-50"><i data-lucide="x" class="w-10 h-10"></i></button>
+        
+        <!-- Navigation Buttons -->
+        <button onclick="changeImage(-1)" class="lightbox-nav absolute left-2 md:left-8 text-white hover:text-karamina p-2 rounded-full z-50"><i data-lucide="chevron-left" class="w-10 h-10"></i></button>
+        <button onclick="changeImage(1)" class="lightbox-nav absolute right-2 md:right-8 text-white hover:text-karamina p-2 rounded-full z-50"><i data-lucide="chevron-right" class="w-10 h-10"></i></button>
+
+        <div class="relative max-w-5xl w-full max-h-screen flex flex-col items-center">
+            <img id="lightbox-img" src="" class="w-auto h-auto max-h-[85vh] max-w-full object-contain rounded-lg shadow-2xl border border-white/10">
+            <div id="lightbox-actions" class="mt-4 text-center hidden">
+                <a id="download-btn" href="#" download class="inline-flex items-center gap-2 bg-karamina text-taupe px-6 py-2 rounded-full font-bold hover:bg-white transition">
+                    <i data-lucide="download" class="w-4 h-4"></i> Download Brosur
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        lucide.createIcons();
+
+        // 1. AUTO HIDE HEADER ON SCROLL
+        let lastScrollY = window.scrollY;
+        const header = document.getElementById('main-header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                header.classList.add('hide');
+            } else {
+                header.classList.remove('hide');
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        // 2. SPA LOGIC
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) selectedPage.classList.add('active');
+
+            // Nav Active States
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const dLink = document.getElementById('nav-' + pageId);
+            if(dLink) dLink.classList.add('active');
+
+            document.querySelectorAll('.mobile-nav-item').forEach(l => l.classList.remove('active'));
+            const mLink = document.getElementById('mob-' + pageId);
+            if(mLink) mLink.classList.add('active');
+
+            window.scrollTo(0, 0);
+        }
+
+        function scrollToFacilities() {
+            showPage('home');
+            setTimeout(() => {
+                const element = document.getElementById('facilities-section');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // 3. LIGHTBOX LOGIC (WITH NAVIGATION)
+        let currentImageIndex = 0;
+        let galleryImages = [];
+
+        function initGallery() {
+            // Collect all gallery images on the page
+            const imgs = document.querySelectorAll('.gallery-img');
+            galleryImages = Array.from(imgs).map(img => img.src);
+        }
+
+        function openLightbox(indexOrSrc) {
+            initGallery(); // Refresh list
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const actions = document.getElementById('lightbox-actions');
+            
+            // Hide download button for standard gallery
+            actions.style.display = 'none';
+
+            if (typeof indexOrSrc === 'number') {
+                currentImageIndex = indexOrSrc;
+                img.src = galleryImages[currentImageIndex];
+            } else {
+                // For brochure or single images
+                img.src = indexOrSrc;
+                // Disable nav buttons if not in gallery list logic (simplified)
+            }
+            
+            lb.classList.add('active');
+        }
+
+        function changeImage(direction) {
+            if (galleryImages.length === 0) return;
+            
+            currentImageIndex += direction;
+            
+            // Loop functionality
+            if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
+            if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
+
+            const img = document.getElementById('lightbox-img');
+            // Add fade effect
+            img.style.opacity = '0.5';
+            setTimeout(() => {
+                img.src = galleryImages[currentImageIndex];
+                img.style.opacity = '1';
+            }, 200);
+        }
+
+        function openDownloadModal(src) {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const btn = document.getElementById('download-btn');
+            const actions = document.getElementById('lightbox-actions');
+
+            img.src = src;
+            btn.href = src;
+            actions.style.display = 'block';
+            lb.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        // 4. LOAD MORE NEWS
+        function loadMoreNews() {
+            const grid = document.getElementById('news-grid');
+            const newArticle = `
+                 <article class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col animate-fade-in">
+                        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=500" class="h-48 object-cover">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                                <span>Lainnya</span> • <span>Baru Saja</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-taupe mb-3 hover:text-karamina transition">Berita Tambahan Terbaru</h3>
+                            <p class="text-gray-600 text-xs lg:text-sm line-clamp-3">Ini adalah contoh artikel tambahan yang dimuat saat tombol diklik.</p>
+                        </div>
+                        <div class="p-6 pt-0 mt-auto">
+                            <a href="#" class="text-karamina-hover font-bold text-sm hover:underline">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+            `;
+            grid.innerHTML += newArticle;
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>
